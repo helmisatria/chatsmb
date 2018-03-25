@@ -1,7 +1,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 
-const readFile = async () => fs.readFileSync(`${__dirname}/../datasets/dataset1.txt`, 'utf8', (err) => {
+const readFile = async () => fs.readFileSync(`${__dirname}/../datasets/try.txt`, 'utf8', (err) => {
   if (err) {
     console.log(err);
   }
@@ -33,7 +33,7 @@ const processingData = async () => {
     _.remove(allData, item => item === arrayItem);
   });
 
-  // console.log(JSON.stringify(allData, {}, 2));
+  console.log(JSON.stringify(allData, {}, 2));
   return allData;
 };
 
@@ -46,7 +46,7 @@ const separateNumberMessage = async () => {
     id: index,
     timestamp: `${d.split(' ')[0]} ${d.split(' ')[1]}`,
     number: d.split(/[+:]/)[2],
-    message: d.split(':')[2].trim().toLowerCase(),
+    message: d.substr(5, 9999).match(/:.*/)[0].substr(1, 9999).trim(),
   }));
 
   // console.log(JSON.stringify(separation, {}, 2));
