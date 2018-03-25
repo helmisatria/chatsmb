@@ -1,7 +1,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 
-const readFile = async () => fs.readFileSync(`${__dirname}/../datasets/try.txt`, 'utf8', (err) => {
+const readFile = async () => fs.readFileSync(`${__dirname}/../datasets/dataset1.txt`, 'utf8', (err) => {
   if (err) {
     console.log(err);
   }
