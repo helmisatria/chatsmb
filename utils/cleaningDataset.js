@@ -1,11 +1,9 @@
 const fs = require('fs');
 const _ = require('lodash');
+const akarata = require('akarata');
+const removePunctuation = require('remove-punctuation');
 
-const readFile = async () => fs.readFileSync(`${__dirname}/../datasets/dataset1.txt`, 'utf8', (err) => {
-  if (err) {
-    console.log(err);
-  }
-});
+const readFile = async () => fs.readFileSync(`${__dirname}/../datasets/dataset1.txt`, 'utf8');
 const processingData = async () => {
   const data = await readFile();
 
@@ -33,7 +31,7 @@ const processingData = async () => {
     _.remove(allData, item => item === arrayItem);
   });
 
-  console.log(JSON.stringify(allData, {}, 2));
+  // console.log(JSON.stringify(allData, {}, 2));
   return allData;
 };
 
@@ -42,12 +40,18 @@ const separateNumberMessage = async () => {
 
   // console.log(JSON.stringify(data, {}, 2))
 
-  const separation = data.map((d, index) => ({
-    id: index,
-    timestamp: `${d.split(' ')[0]} ${d.split(' ')[1]}`,
-    number: d.split(/[+:]/)[2],
-    message: d.substr(5, 9999).match(/:.*/)[0].substr(1, 9999).trim(),
-  }));
+  const separation = data.map((d, index) => {
+    const number = d.split(/[+:]/)[2];
+
+    const isAdmin = number === '62 811-2025-200';
+
+    return {
+      id: index,
+      timestamp: `${d.split(' ')[0]} ${d.split(' ')[1]}`,
+      number,
+      message: isAdmin ? d.split(':')[2].trim().toLowerCase() : removePunctuation(d.split(':')[2].trim().toLowerCase()),
+    };
+  });
 
   // console.log(JSON.stringify(separation, {}, 2));
 
@@ -96,4 +100,23 @@ const mergeMessageWithSameNumber = async () => {
   return separatedData;
 };
 
-module.exports = mergeMessageWithSameNumber;
+const stemmingWords = async (isStem) => {
+  const mergedData = await mergeMessageWithSameNumber();
+
+  if (isStem) {
+    mergedData.map((data) => {
+      let splitted = data.message.split(' ');
+
+      splitted = splitted.map(s => akarata.stem(s));
+
+      return {
+        ...data,
+        message: splitted.join(', '),
+      };
+    });
+  }
+
+  return mergedData;
+};
+
+module.exports = stemmingWords;
