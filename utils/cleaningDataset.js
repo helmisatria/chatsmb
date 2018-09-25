@@ -50,6 +50,7 @@ const separateNumberMessage = async () => {
       timestamp: `${d.split(' ')[0]} ${d.split(' ')[1]}`,
       number,
       message: isAdmin ? d.split(':')[2].trim().toLowerCase() : removePunctuation(d.split(':')[2].trim().toLowerCase()),
+      type: isAdmin ? 'A' : 'Q',
     };
   });
 
