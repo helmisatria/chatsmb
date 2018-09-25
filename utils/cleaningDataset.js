@@ -19,7 +19,7 @@ const processingData = async () => {
     if (d[0] === '=') {
       indexArrayDeleted.push(d);
       return;
-    } else if (d[0] !== '[') {
+    } if (d[0] !== '[') {
       realData[currentIndex] = `${realData[currentIndex]}, ${d}`;
       indexArrayDeleted.push(d);
       return;
@@ -60,14 +60,15 @@ const separateNumberMessage = async () => {
 };
 
 const mergeMessageWithSameNumber = async () => {
-  const separatedData = await separateNumberMessage();
+  let separatedData = await separateNumberMessage();
 
   // console.log('====================================');
   // console.log(JSON.stringify(separatedData, {}, 2));
   // console.log('====================================');
 
-  let currentIndex = 0;
   const deletedId = [];
+  const questionAnswersIndex = [];
+  let currentIndex = 0;
   let currentNumber = '';
 
   separatedData.forEach(({
@@ -87,12 +88,18 @@ const mergeMessageWithSameNumber = async () => {
       return;
     }
     currentIndex = index;
+    questionAnswersIndex.push(currentIndex);
     currentNumber = number;
   });
 
   deletedId.forEach((id) => {
     _.remove(separatedData, data => data.id === id);
   });
+
+  separatedData = separatedData.map((sp, index) => ({
+    ...sp,
+    pairId: sp.type === 'Q' ? questionAnswersIndex[index + 1] : questionAnswersIndex[index - 1],
+  }));
 
   // console.log('====================================');
   // console.log(JSON.stringify(separatedData, {}, 2));
