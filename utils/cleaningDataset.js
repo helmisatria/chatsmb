@@ -96,14 +96,22 @@ const mergeMessageWithSameNumber = async () => {
     _.remove(separatedData, data => data.id === id);
   });
 
-  separatedData = separatedData.map((sp, index) => ({
-    ...sp,
-    pairId: sp.type === 'Q' ? questionAnswersIndex[index + 1] : questionAnswersIndex[index - 1],
-  }));
+  separatedData = separatedData.map((sp, index) => {
+    const nextSp = separatedData[index + 1];
 
-  // console.log('====================================');
-  // console.log(JSON.stringify(separatedData, {}, 2));
-  // console.log('====================================');
+    const notLastValue = separatedData.length - 1 !== index;
+    if (notLastValue && sp.type === 'Q' && nextSp.type === 'Q') {
+      return {
+        ...sp,
+        pairId: null,
+      };
+    }
+
+    return {
+      ...sp,
+      pairId: sp.type === 'Q' ? questionAnswersIndex[index + 1] : questionAnswersIndex[index - 1],
+    };
+  });
 
   return separatedData;
 };
