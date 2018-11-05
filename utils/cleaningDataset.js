@@ -103,7 +103,7 @@ const mergeMessageWithSameNumber = async () => {
     if (notLastValue && sp.type === 'Q' && nextSp.type === 'Q') {
       return {
         ...sp,
-        pairId: null,
+        pairId: 'null',
       };
     }
 
