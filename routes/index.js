@@ -3,13 +3,26 @@ const express = require('express');
 const router = express.Router();
 
 // Utils
-const CLEANING = require('../utils/cleaningDataset');
+const Preprocessing = require('../utils/Preprocessing');
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
-  const cleaningDataset = await CLEANING();
+  const { stopword, stemming, punctuation } = req.query;
+  const Prep = new Preprocessing();
+  await Prep.init();
+  if (stopword) {
+    await Prep.removeStopwords();
+  }
+  if (stemming) {
+    await Prep.stemmingWords();
+  }
+  if (punctuation) {
+    await Prep.removePunctuation();
+  }
+  await Prep.removeEmojis();
+  Prep.questionMessages = await Prep.getSelectedTypeMessage('Q');
 
-  res.json(cleaningDataset);
+  res.json(Prep.data);
 });
 
 module.exports = router;

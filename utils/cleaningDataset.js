@@ -11,7 +11,7 @@ const processingData = async () => {
 
   // console.log(allData.length);
 
-  // Merge data yang gaada nomerny
+  // Merge data yang gaada nomernyyoo?
   let currentIndex = 0;
   const indexArrayDeleted = [];
 
@@ -37,8 +37,6 @@ const processingData = async () => {
 
 const separateNumberMessage = async () => {
   const data = await processingData();
-
-  // console.log(JSON.stringify(data, {}, 2))
 
   const separation = data.map((d, index) => {
     const number = d.split(/[+:]/)[2];
