@@ -60,7 +60,7 @@ class Preprocessing {
     this.data = this.data.map(d => ({
       ...d,
       message: d.message
-        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+        .replace(/[?.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
         .replace(/\s{2,}/g, ' '),
     }));
   }
